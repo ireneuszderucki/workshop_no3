@@ -22,10 +22,10 @@
 	<h3 style="color:red">Edit form:</h3>
 	<form action="GroupMgmt" method="post">
 		<label>ID (uneditable)<br>
-			<input type="text" name="id" value="${group.id}" readonly> 
+			<input type="number" name="id" value="${group.id}" readonly> 
 		</label><br>
 		<label>Type the new name for user group<br>
-			<input type="text" name="editedName" placeholder="${group.name}"> 
+			<input type="text" name="editedName" value="${group.name}"> 
 		</label>
 		<input type="submit" name="editGroupSubmit" value="Submit edition">	
 	</form>

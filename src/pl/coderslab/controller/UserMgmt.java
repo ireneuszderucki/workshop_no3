@@ -11,22 +11,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pl.coderslab.dao.GroupDao;
-import pl.coderslab.model.Group;
+import pl.coderslab.dao.UserDao;
+import pl.coderslab.model.User;
 import pl.coderslab.services.DbUtil;
 import pl.coderslab.services.MultiHelper;
 
 /**
- * Servlet implementation class GroupMgmt
+ * Servlet implementation class UserMgmt
  */
-@WebServlet("/GroupMgmt")
-public class GroupMgmt extends HttpServlet {
+@WebServlet("/UserMgmt")
+public class UserMgmt extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupMgmt() {
+    public UserMgmt() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,36 +37,41 @@ public class GroupMgmt extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Connection conn = DbUtil.getConn();
-			ArrayList<Group> groups = GroupDao.loadAllGroups(conn);
-			if (groups.isEmpty()) {
-				String defaultMsg = "No groups to display";
+			ArrayList<User> users = UserDao.loadAllUsers(conn);
+			if (users.isEmpty()) {
+				String defaultMsg = "No users to display";
 				request.setAttribute("defaultMsg", defaultMsg);
 			}
 			else {
-				request.setAttribute("groups", groups);
+				request.setAttribute("users", users);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		getServletContext().getRequestDispatcher("/WEB-INF/views/GroupMgmt.jsp")
+		getServletContext().getRequestDispatcher("/WEB-INF/views/UserMgmt.jsp")
 		.forward(request, response);
 	}
-
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Connection conn = DbUtil.getConn();
-			String editedName = request.getParameter("editedName");
 			int id = Integer.parseInt(request.getParameter("id"));
-			String editGroupSubmit = request.getParameter("editGroupSubmit"); //value="Submit edition"
-			if (editGroupSubmit.equals("Submit edition")) {
-				if (MultiHelper.atLeastOneChar(editedName)) {
-					Group group = new Group(editedName);
-					group.setId(id);
-					GroupDao.saveGroupToDB(conn, group);
-					response.sendRedirect("GroupMgmt");
+			int groupId = Integer.parseInt(request.getParameter("editedGroupId"));
+			String username = request.getParameter("editedUsername");
+			String password = request.getParameter("editedPassword");
+			String email = request.getParameter("editedEmail");
+			String editUserSubmit = request.getParameter("editUserSubmit");
+			if (editUserSubmit.equals("Submit edition")) {
+				if (MultiHelper.atLeastOneChar(username) &&
+					MultiHelper.atLeastOneChar(password) &&
+					MultiHelper.checkEmail(email)) {
+					User user = new User(groupId, username, password, email);
+					user.setId(id);
+					UserDao.saveUserToDB(conn, user);
+					response.sendRedirect("UserMgmt");
 				}
 			}
 			

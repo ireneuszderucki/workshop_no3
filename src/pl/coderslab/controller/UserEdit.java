@@ -3,7 +3,6 @@ package pl.coderslab.controller;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,22 +10,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pl.coderslab.dao.GroupDao;
-import pl.coderslab.model.Group;
+import pl.coderslab.dao.UserDao;
+import pl.coderslab.model.User;
 import pl.coderslab.services.DbUtil;
 import pl.coderslab.services.MultiHelper;
 
 /**
- * Servlet implementation class GroupMgmt
+ * Servlet implementation class UserEdit
  */
-@WebServlet("/GroupMgmt")
-public class GroupMgmt extends HttpServlet {
+@WebServlet("/UserEdit")
+public class UserEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupMgmt() {
+    public UserEdit() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,36 +36,34 @@ public class GroupMgmt extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Connection conn = DbUtil.getConn();
-			ArrayList<Group> groups = GroupDao.loadAllGroups(conn);
-			if (groups.isEmpty()) {
-				String defaultMsg = "No groups to display";
-				request.setAttribute("defaultMsg", defaultMsg);
-			}
-			else {
-				request.setAttribute("groups", groups);
-			}
+			int id = Integer.parseInt(request.getParameter("id"));
+			User user = UserDao.loadUserById(conn, id);
+			request.setAttribute("user", user);
+		
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		getServletContext().getRequestDispatcher("/WEB-INF/views/GroupMgmt.jsp")
+		getServletContext().getRequestDispatcher("/WEB-INF/views/UserEdit.jsp")
 		.forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			Connection conn = DbUtil.getConn();
-			String editedName = request.getParameter("editedName");
-			int id = Integer.parseInt(request.getParameter("id"));
-			String editGroupSubmit = request.getParameter("editGroupSubmit"); //value="Submit edition"
-			if (editGroupSubmit.equals("Submit edition")) {
-				if (MultiHelper.atLeastOneChar(editedName)) {
-					Group group = new Group(editedName);
-					group.setId(id);
-					GroupDao.saveGroupToDB(conn, group);
-					response.sendRedirect("GroupMgmt");
+			int groupId = Integer.parseInt(request.getParameter("newGroupId"));
+			String username = request.getParameter("newUsername");
+			String password = request.getParameter("newPassword");
+			String email = request.getParameter("newEmail");
+			String newUserSubmit = request.getParameter("newUserSubmit");
+			if (newUserSubmit.equals("Submit new user")) {
+				if (MultiHelper.atLeastOneChar(username) &&
+					MultiHelper.atLeastOneChar(password) &&
+					MultiHelper.checkEmail(email)) {
+					User user = new User(groupId, username, password, email);
+					UserDao.saveUserToDB(conn, user);
+					response.sendRedirect("UserMgmt");
 				}
 			}
 			

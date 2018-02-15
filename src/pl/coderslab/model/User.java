@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class User {
@@ -84,41 +83,13 @@ public class User {
 	 * hashes the password using BCrypt
 	 * @param password
 	 */
-	public void setPassword(String password) {
+	private void setPassword(String password) {
 		this.password = BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 	
-	/**
-	 * saves or updates single user data in database
-	 * @param conn
-	 * @throws SQLException
-	 */
-	public void saveUserToDB(Connection conn) throws SQLException {
-		if (this.id == 0) {
-			String sql = "INSERT INTO users (user_group_id, username, password, email) VALUES (?, ?, ?, ?)";
-			String generatedColumns[] = { "ID" };
-			PreparedStatement preStm = conn.prepareStatement(sql, generatedColumns);
-			preStm.setInt(1, this.group);
-			preStm.setString(2, this.username);
-			preStm.setString(3, this.password);
-			preStm.setString(4, this.email);
-			preStm.executeUpdate();
-			ResultSet rs = preStm.getGeneratedKeys();
-			if (rs.next()) {
-				this.id = rs.getInt(1);
-			}
-		}
-		else {
-			String sql = "UPDATE users SET user_group_id=?, username=?, password=?, email=? where id=?";
-			PreparedStatement preStm = conn.prepareStatement(sql);
-			preStm.setInt(1, this.group);
-			preStm.setString(2, this.username);
-			preStm.setString(3, this.password);
-			preStm.setString(4, this.email);
-			preStm.setInt(5, this.id);
-			preStm.executeUpdate();
-		}
-	} 
+	public void setHashedPassword(String password) {
+		this.password = password;
+	}
 	
 	/**
 	 * deletes a single user from database (by id)

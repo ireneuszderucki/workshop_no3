@@ -10,5 +10,14 @@ public class MultiHelper {
 			return false;
 		}
 	}
+	
+	static public boolean checkEmail(String string) {
+		if (string.length()>4 && string.contains("@")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
 }

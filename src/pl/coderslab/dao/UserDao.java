@@ -29,7 +29,7 @@ public class UserDao {
 			loadedUser.setId(rs.getInt("id"));
 			loadedUser.setGroup(rs.getInt("user_group_id"));
 			loadedUser.setUsername(rs.getString("username"));
-			loadedUser.setPassword(rs.getString("password"));
+			loadedUser.setHashedPassword(rs.getString("password"));
 			loadedUser.setEmail(rs.getString("email"));
 			users.add(loadedUser);
 		}
@@ -54,7 +54,7 @@ public class UserDao {
 			loadedUser.setId(rs.getInt("id"));
 			loadedUser.setGroup(rs.getInt("user_group_id"));
 			loadedUser.setUsername(rs.getString("username"));
-			loadedUser.setPassword(rs.getString("password"));
+			loadedUser.setHashedPassword(rs.getString("password"));
 			loadedUser.setEmail(rs.getString("email"));
 			return loadedUser;
 		}
@@ -78,11 +78,43 @@ public class UserDao {
 			loadedUser.setId(rs.getInt("id"));
 			loadedUser.setGroup(rs.getInt("user_group_id"));
 			loadedUser.setUsername(rs.getString("username"));
-			loadedUser.setPassword(rs.getString("password"));
+			loadedUser.setHashedPassword(rs.getString("password"));
 			loadedUser.setEmail(rs.getString("email"));
 			users.add(loadedUser);			
 		}
 		return users;
 	}
+	
+	/**
+	 * saves or updates single user data in database
+	 * @param conn
+	 * @throws SQLException
+	 */
+	static public void saveUserToDB(Connection conn, User user) throws SQLException {
+		if (user.getId() == 0) {
+			String sql = "INSERT INTO users (user_group_id, username, password, email) VALUES (?, ?, ?, ?)";
+			String generatedColumns[] = { "ID" };
+			PreparedStatement preStm = conn.prepareStatement(sql, generatedColumns);
+			preStm.setInt(1, user.getGroup());
+			preStm.setString(2, user.getUsername());
+			preStm.setString(3, user.getPassword());
+			preStm.setString(4, user.getEmail());
+			preStm.executeUpdate();
+			ResultSet rs = preStm.getGeneratedKeys();
+			if (rs.next()) {
+				user.setId(rs.getInt(1));
+			}
+		}
+		else {
+			String sql = "UPDATE users SET user_group_id=?, username=?, password=?, email=? where id=?";
+			PreparedStatement preStm = conn.prepareStatement(sql);
+			preStm.setInt(1, user.getGroup());
+			preStm.setString(2, user.getUsername());
+			preStm.setString(3, user.getPassword());
+			preStm.setString(4, user.getEmail());
+			preStm.setInt(5, user.getId());
+			preStm.executeUpdate();
+		}
+	} 
 
 }

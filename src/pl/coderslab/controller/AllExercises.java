@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.coderslab.dao.ExerciseDao;
-import pl.coderslab.dao.UserDao;
 import pl.coderslab.model.Exercise;
 import pl.coderslab.services.DbUtil;
 
