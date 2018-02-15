@@ -5,23 +5,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>All Groups</title>
+<title>User details and solutions</title>
 </head>
 <body>
-	<table border="1">
-		<tr>
-			<th>Group ID</th>
-			<th>name</th>
-			<th>Link to group members list</th>
-		</tr>
-		<c:forEach items="${groups}" var="group">
-			<tr>
-				<td>${group.id}</td>			
-				<td>${group.name}</td>
-				<td><a href="GroupMembers?id=${group.id}">Click here</a></td>
-			</tr>
+	<h2>User details:</h2>
+	<h3>User ID: ${user.id}</h3>
+	<h3>Group ID: ${user.group}</h3>
+	<h3>Username: ${user.username}</h3>
+	<h3>Password: ${user.password}</h3>
+	<h3>Email: ${user.email}</h3>
+	<h2>User's solutions details:</h2>
+	<ul>
+		<c:forEach items="${solutions}" var="solution">
+			<li>${solution}</li>
 		</c:forEach>
-	</table>
+	</ul>
 </body>
 </html>
 <%@ include file="/WEB-INF/fragments/footer.jsp" %>
