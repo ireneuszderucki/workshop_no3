@@ -58,35 +58,7 @@ public class Exercise {
 		this.description = description;
 		return this;
 	}
-	
-	/**
-	 * saves or updates exercise to database
-	 * @param conn
-	 * @throws SQLException
-	 */
-	public void saveExerciseToDB(Connection conn) throws SQLException {
-		if (this.id == 0) {
-			String sql = "INSERT INTO exercise (title, description) VALUES (?, ?)";
-			String generatedColumns[] = { "ID" };
-			PreparedStatement preStm = conn.prepareStatement(sql, generatedColumns);
-			preStm.setString(1, this.title);
-			preStm.setString(2, this.description);
-			preStm.executeUpdate();
-			ResultSet rs = preStm.getGeneratedKeys();
-			if (rs.next()) {
-				this.id = rs.getInt(1);
-			}
-		}
-		else {
-			String sql = "UPDATE exercise SET title=?, description=? where id=?";
-			PreparedStatement preStm = conn.prepareStatement(sql);
-			preStm.setString(1, this.title);
-			preStm.setString(2, this.description);
-			preStm.setInt(3, this.id);
-			preStm.executeUpdate();
-		}
-	} 
-	
+		
 	/**
 	 * deletes exercise from database (by id)
 	 * @param conn
@@ -101,53 +73,6 @@ public class Exercise {
 			preStm.executeUpdate();
 			this.id = 0;
 		}
-	}
-	
-	/**
-	 * loads a single exercise from database (by id) and creates Exercise object
-	 * @param conn
-	 * @param id
-	 * @return Exercise object / null
-	 * @throws SQLException
-	 */
-	static public Exercise loadExerciseById(Connection conn, int id) throws SQLException {
-		String sql = "SELECT * FROM exercise where id=?";
-		PreparedStatement preStm = conn.prepareStatement(sql);
-		preStm.setInt(1, id);
-		ResultSet rs = preStm.executeQuery();
-		if (rs.next()) {
-			Exercise loadedExercise = new Exercise();
-			loadedExercise.id = rs.getInt("id");
-			loadedExercise.title = rs.getString("title");
-			loadedExercise.description = rs.getString("description");
-			return loadedExercise;
-		}
-		return null;
-	}
-
-	
-	/**
-	 * loads all exercises from database and creates an array of Exercise objects
-	 * @param conn
-	 * @return Exercise[] array
-	 * @throws SQLException
-	 */
-	
-	static public Exercise[] loadAllExercises(Connection conn) throws SQLException {
-		ArrayList<Exercise> exercises = new ArrayList<Exercise>();
-		String sql = "SELECT * FROM exercise";
-		PreparedStatement preStm = conn.prepareStatement(sql);
-		ResultSet rs = preStm.executeQuery();
-		while (rs.next()) {
-			Exercise loadedExercise = new Exercise();
-			loadedExercise.id = rs.getInt("id");
-			loadedExercise.title = rs.getString("title");
-			loadedExercise.description = rs.getString("description");
-			exercises.add(loadedExercise);			
-		}
-		Exercise[] uArray = new Exercise[exercises.size()];
-		uArray = exercises.toArray(uArray);
-		return uArray;
 	}
 	
 	/**
