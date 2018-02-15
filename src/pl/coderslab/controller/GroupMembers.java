@@ -38,7 +38,13 @@ public class GroupMembers extends HttpServlet {
 			Connection conn = DbUtil.getConn();
 			int id = Integer.parseInt(request.getParameter("id"));
 			ArrayList<User> usersInGroup = UserDao.loadAllUsersByGroupId(conn, id);
-			request.setAttribute("usersInGroup", usersInGroup);
+			if (usersInGroup.isEmpty()) {
+				String defaultMsg = "No users to diplay";
+				request.setAttribute("defaultMsg", defaultMsg);
+			}
+			else {
+				request.setAttribute("usersInGroup", usersInGroup);
+			}
 		
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

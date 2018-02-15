@@ -8,26 +8,34 @@
 <title>Group members</title>
 </head>
 <body>
-	<table border="1">
-		<tr>
-			<th>User ID</th>
-			<th>Group ID</th>
-			<th>Username</th>
-			<th>Password</th>
-			<th>Email</th>
-			<th>Link to user details</th>
-		</tr>
-		<c:forEach items="${usersInGroup}" var="user">
-			<tr>
-				<td>${user.id}</td>			
-				<td>${user.group}</td>
-				<td>${user.username}</td>
-				<td>${user.password}</td>
-				<td>${user.email}</td>
-				<td><a href="UserDetails?id=${user.id}">Click here</a></td>
-			</tr>
-		</c:forEach>
-	</table>
+	<c:choose>
+  		<c:when test="${not empty usersInGroup}">
+		    <table border="1">
+				<tr>
+					<th>User ID</th>
+					<th>Group ID</th>
+					<th>Username</th>
+					<th>Password</th>
+					<th>Email</th>
+					<th>Link to user details</th>
+				</tr>
+				<c:forEach items="${usersInGroup}" var="user">
+					<tr>
+						<td>${user.id}</td>			
+						<td>${user.group}</td>
+						<td>${user.username}</td>
+						<td>${user.password}</td>
+						<td>${user.email}</td>
+						<td><a href="UserDetails?id=${user.id}">Click here</a></td>
+					</tr>
+				</c:forEach>
+			</table>
+  		</c:when>
+  		<c:otherwise>
+    <h1>${defaultMsg}</h1>
+  		</c:otherwise>
+  	</c:choose>
+	
 
 </body>
 </html>
