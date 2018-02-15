@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>All Groups</title>
+<title>Group Management</title>
 </head>
 <body>
 	<c:choose>
@@ -14,21 +14,23 @@
 				<tr>
 					<th>Group ID</th>
 					<th>Name</th>
-					<th>Link to group members list</th>
+					<th>Edit</th>
 				</tr>
 				<c:forEach items="${groups}" var="group">
 					<tr>
 						<td>${group.id}</td>			
 						<td>${group.name}</td>
-						<td><a href="GroupMembers?id=${group.id}">Click here</a></td>
+						<td><a href="GroupEdit?id=${group.id}">Edit the group</a></td>
 					</tr>
 				</c:forEach>
 			</table>
   		</c:when>
   		<c:otherwise>
-    		<h1>${defaultMsg}</h1>
+    <h1>${defaultMsg}</h1>
   		</c:otherwise>
   	</c:choose>
+	
+
 </body>
 </html>
 <%@ include file="/WEB-INF/fragments/footer.jsp" %>

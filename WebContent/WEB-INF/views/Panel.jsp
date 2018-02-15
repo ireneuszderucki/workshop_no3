@@ -7,7 +7,7 @@
 <title>Administrator Panel</title>
 </head>
 <body>
-	<a href="">Go to: Exercises List</a>
+	<a href="AllExercises">Go to: Exercises List</a>
 	<a href="AllGroups">Go to: User Groups List</a>
 	<a href="AllUsers">Go to: Users List</a>
 

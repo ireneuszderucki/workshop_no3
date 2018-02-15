@@ -29,5 +29,52 @@ public class GroupDao {
 		}
 		return groups;
 	}
+	
+	/**
+	 * loads a single user_group from database (by id) and creates Group object
+	 * @param conn
+	 * @param id
+	 * @return Group object / null
+	 * @throws SQLException
+	 */
+	static public Group loadGroupById(Connection conn, int id) throws SQLException {
+		String sql = "SELECT * FROM user_group where id=?";
+		PreparedStatement preStm = conn.prepareStatement(sql);
+		preStm.setInt(1, id);
+		ResultSet rs = preStm.executeQuery();
+		if (rs.next()) {
+			Group loadedGroup = new Group();
+			loadedGroup.setId(rs.getInt("id"));
+			loadedGroup.setName(rs.getString("name"));
+			return loadedGroup;
+		}
+		return null;
+	}
+	
+	/**
+	 * saves or updates user_group to database
+	 * @param conn
+	 * @throws SQLException
+	 */
+	static public void saveGroupToDB(Connection conn, Group group) throws SQLException {
+		if (group.getId() == 0) {
+			String sql = "INSERT INTO user_group (name) VALUES (?)";
+			String generatedColumns[] = { "ID" };
+			PreparedStatement preStm = conn.prepareStatement(sql, generatedColumns);
+			preStm.setString(1, group.getName());
+			preStm.executeUpdate();
+			ResultSet rs = preStm.getGeneratedKeys();
+			if (rs.next()) {
+				group.setId(rs.getInt(1));
+			}
+		}
+		else {
+			String sql = "UPDATE user_group SET name=? where id=?";
+			PreparedStatement preStm = conn.prepareStatement(sql);
+			preStm.setString(1, group.getName());
+			preStm.setInt(2, group.getId());
+			preStm.executeUpdate();
+		}
+	}
 
 }

@@ -14,18 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 import pl.coderslab.dao.GroupDao;
 import pl.coderslab.model.Group;
 import pl.coderslab.services.DbUtil;
+import pl.coderslab.services.MultiHelper;
 
 /**
- * Servlet implementation class AllGroups
+ * Servlet implementation class GroupMgmt
  */
-@WebServlet("/AllGroups")
-public class AllGroups extends HttpServlet {
+@WebServlet("/GroupMgmt")
+public class GroupMgmt extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AllGroups() {
+    public GroupMgmt() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,7 +48,7 @@ public class AllGroups extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		getServletContext().getRequestDispatcher("/WEB-INF/views/AllGroups.jsp")
+		getServletContext().getRequestDispatcher("/WEB-INF/views/GroupMgmt.jsp")
 		.forward(request, response);
 	}
 
@@ -56,7 +57,28 @@ public class AllGroups extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		try {
+			Connection conn = DbUtil.getConn();
+			String editedName = request.getParameter("editedName");
+			int id = Integer.parseInt(request.getParameter("id"));
+			String editGroupSubmit = request.getParameter("editGroupSubmit"); //value="Submit edition"
+			if (editGroupSubmit.equals("Submit edition")) {
+				if (MultiHelper.atLeastOneChar(editedName)) {
+					Group group = new Group(editedName);
+					group.setId(id);
+					GroupDao.saveGroupToDB(conn, group);
+					response.sendRedirect("GroupMgmt");
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

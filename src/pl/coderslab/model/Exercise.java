@@ -36,7 +36,7 @@ public class Exercise {
 		return id;
 	}
 	
-	protected Exercise setId(int id) {
+	public Exercise setId(int id) {
 		this.id = id;
 		return this;
 	}

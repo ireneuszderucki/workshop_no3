@@ -5,30 +5,32 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>All Groups</title>
+<title>All Exercises</title>
 </head>
 <body>
 	<c:choose>
-  		<c:when test="${not empty groups}">
+  		<c:when test="${not empty allExercises}">
 		    <table border="1">
 				<tr>
-					<th>Group ID</th>
-					<th>Name</th>
-					<th>Link to group members list</th>
+					<th>Exercise ID</th>
+					<th>Title</th>
+					<th>Description</th>
 				</tr>
-				<c:forEach items="${groups}" var="group">
+				<c:forEach items="${allExercises}" var="exercise">
 					<tr>
-						<td>${group.id}</td>			
-						<td>${group.name}</td>
-						<td><a href="GroupMembers?id=${group.id}">Click here</a></td>
+						<td>${exercise.id}</td>			
+						<td>${exercise.title}</td>
+						<td>${exercise.description}</td>
 					</tr>
 				</c:forEach>
 			</table>
   		</c:when>
   		<c:otherwise>
-    		<h1>${defaultMsg}</h1>
+    <h1>${defaultMsg}</h1>
   		</c:otherwise>
   	</c:choose>
+	
+
 </body>
 </html>
 <%@ include file="/WEB-INF/fragments/footer.jsp" %>
